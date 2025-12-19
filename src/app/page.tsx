@@ -59,7 +59,7 @@ export default function LandingPage() {
         </div>
 
         <div className="text-sm text-zinc-500">
-          Runs in guest mode by default (localStorage). You can wire up Supabase later.
+          Sign in to sync across devices. Guests store data locally.
         </div>
       </div>
     </div>

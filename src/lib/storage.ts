@@ -1,12 +1,14 @@
 "use client";
 
 import type { DailyLog, FoodItem, MacroTargets, OnboardingState, Units, WorkoutDay } from "@/lib/types";
+import { supabase } from "@/lib/supabaseClient";
 import { format } from "date-fns";
 
 const KEY = "flexlog:v1";
 const DEVICE_KEY = "flexlog:device-id";
 const SNAPSHOT_ENDPOINT = "/api/storage/snapshot";
 const SUPABASE_SYNC_ENABLED = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
+const USER_SNAPSHOT_TABLE = "user_snapshots";
 
 type StoreState = {
   units: Units | null;
@@ -23,9 +25,16 @@ type StoreState = {
 
 let latestSnapshotPayload: StoreState | null = null;
 let snapshotTimer: number | null = null;
+let latestUserSnapshotPayload: StoreState | null = null;
+let userSnapshotTimer: number | null = null;
+let currentUserId: string | null = null;
 
 function shouldSyncSnapshots() {
   return typeof window !== "undefined" && SUPABASE_SYNC_ENABLED;
+}
+
+export function setStoreUser(userId: string | null) {
+  currentUserId = userId;
 }
 
 function ensureDeviceId() {
@@ -58,8 +67,38 @@ async function pushSnapshot(state: StoreState) {
   }
 }
 
+async function pushUserSnapshot(state: StoreState) {
+  if (!currentUserId || !supabase) return;
+  try {
+    const { error } = await supabase.from(USER_SNAPSHOT_TABLE).upsert({
+      user_id: currentUserId,
+      state,
+      updated_at: new Date().toISOString(),
+    });
+    if (error) console.warn("Failed to sync user snapshot", error);
+  } catch (err) {
+    console.warn("Failed to sync user snapshot", err);
+  }
+}
+
 function scheduleSnapshot(state: StoreState) {
   if (!shouldSyncSnapshots()) return;
+
+   // Signed-in users: sync to Supabase user_snapshots via RLS
+  if (currentUserId && supabase) {
+    latestUserSnapshotPayload = cloneState(state);
+    if (userSnapshotTimer) return;
+    userSnapshotTimer = window.setTimeout(() => {
+      userSnapshotTimer = null;
+      if (!latestUserSnapshotPayload) return;
+      pushUserSnapshot(latestUserSnapshotPayload).catch(() => {
+        // logged inside pushUserSnapshot
+      });
+    }, 1000);
+    return;
+  }
+
+  // Guest fallback: sync to device-scoped snapshots
   latestSnapshotPayload = cloneState(state);
   if (snapshotTimer) return;
   snapshotTimer = window.setTimeout(() => {
@@ -101,6 +140,27 @@ function read(): StoreState {
 function write(next: StoreState) {
   localStorage.setItem(KEY, JSON.stringify(next));
   scheduleSnapshot(next);
+}
+
+export async function hydrateStoreForUser(userId: string) {
+  if (!supabase) return { synced: false, reason: "supabase_not_configured" as const };
+
+  setStoreUser(userId);
+  const { data, error } = await supabase.from(USER_SNAPSHOT_TABLE).select("state").eq("user_id", userId).maybeSingle();
+  if (error) {
+    console.warn("Failed to fetch user snapshot", error);
+    return { synced: false, reason: "fetch_error" as const };
+  }
+  if (data?.state) {
+    // Replace local state with cloud copy; scheduleSync will push fresh snapshot afterward.
+    localStorage.setItem(KEY, JSON.stringify(data.state));
+    scheduleSnapshot(data.state);
+    return { synced: true, reason: "loaded_remote" as const };
+  }
+
+  // No remote snapshot yet; push current local state so it follows the user.
+  scheduleSnapshot(read());
+  return { synced: true, reason: "no_remote" as const };
 }
 
 export function useStore() {

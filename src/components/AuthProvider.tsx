@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabaseClient";
+import { hydrateStoreForUser, setStoreUser } from "@/lib/storage";
 
 type AuthContextValue = {
   session: Session | null;
@@ -84,6 +85,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }),
     [session, user, loading, ready, supabaseReady],
   );
+
+  // Sync store with user context so snapshots follow the signed-in user
+  useEffect(() => {
+    setStoreUser(user?.id ?? null);
+    if (user?.id) {
+      hydrateStoreForUser(user.id).catch((err) => {
+        console.warn("Failed to hydrate store for user", err);
+      });
+    }
+  }, [user?.id]);
 
   return <AuthContext.Provider value={ctx}>{children}</AuthContext.Provider>;
 }

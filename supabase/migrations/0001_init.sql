@@ -198,6 +198,18 @@ create policy "exercise_logs_delete_own" on exercise_logs for delete using (auth
 create policy "food_cache_no_access" on food_cache for select using (false);
 create policy "food_cache_no_access_insert" on food_cache for insert with check (false);
 create policy "food_cache_no_access_update" on food_cache for update using (false);
+
+-- User snapshots (sync local state to user account)
+create table if not exists user_snapshots (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  state jsonb not null,
+  updated_at timestamptz not null default now()
+);
+
+alter table user_snapshots enable row level security;
+create policy "user_snapshots_select_own" on user_snapshots for select using (auth.uid() = user_id);
+create policy "user_snapshots_upsert_own" on user_snapshots for insert with check (auth.uid() = user_id);
+create policy "user_snapshots_update_own" on user_snapshots for update using (auth.uid() = user_id);
 create policy "food_cache_no_access_delete" on food_cache for delete using (false);
 
 -- Guest snapshots: device-level serialized state for unauthenticated users (service role access only)
