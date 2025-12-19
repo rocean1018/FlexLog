@@ -290,7 +290,7 @@ function normalizePer(per: string | null | undefined) {
 }
 
 function getUnitOptions(food: FoodResult) {
-  const normalized = normalizePer(food.per);
+  const normalized = normalizePer(food.per ?? undefined);
   const options: UnitOption[] = [];
   if (normalized?.grams) {
     const label = food.per ?? `${normalized.grams} g`;
