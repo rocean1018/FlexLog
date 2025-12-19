@@ -1,13 +1,13 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
   "/api/storage/snapshot/route": "app/api/storage/snapshot/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/api/foods/search/route": "app/api/foods/search/route.js",
   "/api/foods/barcode/route": "app/api/foods/barcode/route.js",
-  "/foods/page": "app/foods/page.js",
   "/log/page": "app/log/page.js",
-  "/onboarding/page": "app/onboarding/page.js",
   "/page": "app/page.js",
-  "/workouts/page": "app/workouts/page.js",
+  "/foods/page": "app/foods/page.js",
   "/settings/page": "app/settings/page.js",
+  "/workouts/page": "app/workouts/page.js",
+  "/onboarding/page": "app/onboarding/page.js",
   "/auth/page": "app/auth/page.js"
 }

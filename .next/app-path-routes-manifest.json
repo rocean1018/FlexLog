@@ -1,13 +1,13 @@
 {
-  "/_not-found/page": "/_not-found",
   "/api/storage/snapshot/route": "/api/storage/snapshot",
+  "/_not-found/page": "/_not-found",
   "/api/foods/search/route": "/api/foods/search",
   "/api/foods/barcode/route": "/api/foods/barcode",
-  "/foods/page": "/foods",
   "/log/page": "/log",
-  "/onboarding/page": "/onboarding",
   "/page": "/",
-  "/workouts/page": "/workouts",
+  "/foods/page": "/foods",
   "/settings/page": "/settings",
+  "/workouts/page": "/workouts",
+  "/onboarding/page": "/onboarding",
   "/auth/page": "/auth"
 }
