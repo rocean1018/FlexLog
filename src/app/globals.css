@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: "Inter", "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.08), transparent 45%),
+    radial-gradient(circle at 80% 0%, rgba(236, 72, 153, 0.08), transparent 40%),
+    #02040d;
+  color: #f8fafc;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #fff;
+}
+
+::selection {
+  background: rgba(56, 189, 248, 0.35);
+  color: #fff;
+}
