@@ -6,15 +6,20 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
+    "/workouts/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/workouts/page.js"
+    ],
     "/log/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/log/page.js"
     ],
-    "/workouts/page": [
+    "/api/storage/snapshot/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/workouts/page.js"
+      "static/chunks/app/api/storage/snapshot/route.js"
     ]
   }
 }
