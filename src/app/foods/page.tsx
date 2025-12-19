@@ -274,7 +274,7 @@ const CUP_IN_GRAMS = 240; // rough water-based estimate
 
 type UnitOption = { value: string; label: string; toGrams?: number };
 
-function normalizePer(per?: string) {
+function normalizePer(per?: string | null) {
   if (!per) return null;
   const match = per.match(/([\d.]+)\s*(g|gram|grams|oz|ounce|ounces|lb|pound|pounds|ml|milliliter|milliliters|cup|cups)/i);
   if (!match) return null;
