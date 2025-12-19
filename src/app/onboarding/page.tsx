@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Tabs } from "@/components/ui/Tabs";
+import type { OnboardingState } from "@/lib/types";
 import { computeTargets, GoalMode, Units } from "@/lib/tdee";
 import { useStore } from "@/lib/storage";
 import { toast } from "@/components/ui/Toaster";
@@ -14,15 +15,15 @@ export default function OnboardingPage() {
   const store = useStore();
 
   const [units, setUnits] = useState<Units>(store.getUnits() ?? "lb");
-  const [sex, setSex] = useState<"male" | "female">(store.getOnboarding()?.sex ?? "male");
+  const [sex, setSex] = useState<OnboardingState["sex"]>(store.getOnboarding()?.sex ?? "male");
   const [age, setAge] = useState<number>(store.getOnboarding()?.age ?? 18);
   const [heightCm, setHeightCm] = useState<number>(store.getOnboarding()?.heightCm ?? 175);
   const [weight, setWeight] = useState<number>(store.getOnboarding()?.weight ?? 160);
 
-  const [activity, setActivity] = useState(store.getOnboarding()?.activity ?? "moderate");
+  const [activity, setActivity] = useState<OnboardingState["activity"]>(store.getOnboarding()?.activity ?? "moderate");
 
   const [goalMode, setGoalMode] = useState<GoalMode>(store.getOnboarding()?.goalMode ?? "simple");
-  const [simpleGoal, setSimpleGoal] = useState(store.getOnboarding()?.simpleGoal ?? "lose");
+  const [simpleGoal, setSimpleGoal] = useState<OnboardingState["simpleGoal"]>(store.getOnboarding()?.simpleGoal ?? "lose");
   const [percent, setPercent] = useState<number>(store.getOnboarding()?.percent ?? -15);
   const [rate, setRate] = useState<number>(store.getOnboarding()?.rate ?? (units === "lb" ? 0.75 : 0.35));
 
@@ -67,7 +68,7 @@ export default function OnboardingPage() {
             <Select
               label="Sex"
               value={sex}
-              onChange={(v) => setSex(v as any)}
+              onChange={(v) => setSex(v as OnboardingState["sex"])}
               options={[
                 { value: "male", label: "Male" },
                 { value: "female", label: "Female" },
@@ -84,7 +85,7 @@ export default function OnboardingPage() {
             <Select
               label="Activity"
               value={activity}
-              onChange={(v) => setActivity(v)}
+              onChange={(v) => setActivity(v as OnboardingState["activity"])}
               options={[
                 { value: "sedentary", label: "Sedentary" },
                 { value: "light", label: "Light" },
@@ -113,7 +114,7 @@ export default function OnboardingPage() {
               <Select
                 label="Goal"
                 value={simpleGoal}
-                onChange={(v) => setSimpleGoal(v)}
+                onChange={(v) => setSimpleGoal(v as OnboardingState["simpleGoal"])}
                 options={[
                   { value: "lose", label: "Lose" },
                   { value: "maintain", label: "Maintain" },

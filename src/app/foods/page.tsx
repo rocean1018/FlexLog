@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { StickyHeader } from "@/components/StickyHeader";
@@ -16,6 +16,14 @@ import { Search, ScanLine, Plus } from "lucide-react";
 import { BarcodeScanner } from "@/components/BarcodeScanner";
 
 export default function FoodsPage() {
+  return (
+    <Suspense fallback={<div className="p-6 text-center text-sm text-white/70">Loading foods…</div>}>
+      <FoodsPageContent />
+    </Suspense>
+  );
+}
+
+function FoodsPageContent() {
   const store = useStore();
   const searchParams = useSearchParams();
   const date = store.getSelectedDate() ?? new Date().toISOString().slice(0, 10);

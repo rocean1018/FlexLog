@@ -22,7 +22,7 @@ type StoreState = {
 };
 
 let latestSnapshotPayload: StoreState | null = null;
-let snapshotTimer: ReturnType<typeof setTimeout> | null = null;
+let snapshotTimer: number | null = null;
 
 function shouldSyncSnapshots() {
   return typeof window !== "undefined" && SUPABASE_SYNC_ENABLED;

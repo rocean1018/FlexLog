@@ -1,7 +1,7 @@
-import type { MacroTargets, OnboardingState, Units } from "@/lib/types";
+import type { MacroTargets, Units } from "@/lib/types";
 
 export type GoalMode = "rate" | "percent" | "simple";
-export type Units = "lb" | "kg";
+export type { Units };
 
 type Params = {
   units: Units;

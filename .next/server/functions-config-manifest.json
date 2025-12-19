@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "functions": {
+    "/api/foods/barcode": {},
+    "/api/foods/search": {}
+  }
+}

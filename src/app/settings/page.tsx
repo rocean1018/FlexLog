@@ -7,13 +7,14 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { useStore } from "@/lib/storage";
+import type { Units } from "@/lib/types";
 import { useState } from "react";
 import { toast } from "@/components/ui/Toaster";
 
 export default function SettingsPage() {
   const store = useStore();
   const targets = store.getTargets();
-  const [units, setUnits] = useState(store.getUnits() ?? "lb");
+  const [units, setUnits] = useState<Units>(store.getUnits() ?? "lb");
   const onboarding = store.getOnboarding();
 
   const [strengthEnabled, setStrengthEnabled] = useState<boolean>(store.getStrengthTrackerEnabled());
@@ -28,7 +29,7 @@ export default function SettingsPage() {
   const [fat, setFat] = useState<number>(targets?.fat_g ?? 60);
 
   function save() {
-    store.setUnits(units as any);
+    store.setUnits(units);
     store.setTargets({ calories, protein_g: protein, carbs_g: carbs, fat_g: fat });
     store.setStrengthTrackerEnabled(strengthEnabled);
     const parsed = bwOverride.trim() ? Number(bwOverride) : null;
@@ -55,7 +56,7 @@ export default function SettingsPage() {
             <Select
               label="Bodyweight units"
               value={units}
-              onChange={setUnits}
+              onChange={(v) => setUnits(v as Units)}
               options={[
                 { value: "lb", label: "lb" },
                 { value: "kg", label: "kg" },
