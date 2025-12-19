@@ -1,5 +1,5 @@
 {
   "/api/storage/snapshot/route": "app/api/storage/snapshot/route.js",
-  "/workouts/page": "app/workouts/page.js",
+  "/page": "app/page.js",
   "/log/page": "app/log/page.js"
 }
